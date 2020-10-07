@@ -232,9 +232,9 @@ def main():
     dyn = CartPoleDynamics(m_c, m_p, l)
 
     dt = 1. / 30.
-    tf = 3.
+    tf = 2.
 
-    Q = 1e1 * np.eye(4)
+    Q = 1e1 * np.eye(4)# ; Q[0,0] = 0.; Q[1,1] = 0
     R = 1e-1 * np.eye(1)
     x_star = np.array([0., np.pi, 0., 0.,])
     cost = QuadraticCost(Q, R)
@@ -244,15 +244,16 @@ def main():
     fig2 = plt.figure()
     ax2 = plt.gca()
 
-    num_sim = 100
+    num_sim = 500
     with open("../data/data.csv", 'w') as fp:
         fp.write("m_c={},m_p={},l={}\n".format(m_c, m_p, l))
         fp.write("group,z,theta,z_dot,theta_dot,u\n")
         for grp in tqdm(range(num_sim)):
-            x0 = np.array([np.random.uniform(-1., 1.),
-            np.random.uniform(-np.pi/2, np.pi/2),
-            np.random.uniform(-1., 1.),
-            np.random.uniform(-np.pi/16, np.pi/16)])
+            x0 = np.array([np.random.uniform(-2., 2.),
+                           0.,#np.random.uniform(-np.pi, np.pi),
+                           0.,#np.random.uniform(-1., -1.),
+                           0.#np.random.uniform(-np.pi/16, np.pi/16)
+                          ])
             x, u, J = ddp_control(x0, x_star, tf, int(tf / dt), dyn, cost, 10., 300, 0.15)
             ax1.plot(x[:,0], np.linspace(0, tf, x.shape[0]), x[:,1])
             ax2.semilogy(J)
