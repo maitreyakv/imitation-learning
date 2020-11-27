@@ -250,11 +250,11 @@ def main():
         fp.write("group,z,theta,z_dot,theta_dot,u\n")
         for grp in tqdm(range(num_sim)):
             x0 = np.array([np.random.uniform(-2., 2.),
-                           np.random.uniform(-np.pi/4, np.pi/4),
-                           np.random.uniform(-1., -1.),
-                           np.random.uniform(-np.pi/4, np.pi/4)
+                           np.random.uniform(-np.pi/16, np.pi/16),
+                           np.random.uniform(-0.1, 0.1),
+                           np.random.uniform(-np.pi/16, np.pi/16)
                           ])
-            x, u, J = ddp_control(x0, x_star, tf, int(tf / dt), dyn, cost, 10., 300, 0.1)
+            x, u, J = ddp_control(x0, x_star, tf, int(tf / dt), dyn, cost, 10., 300, 0.08)
             ax1.plot(x[:,0], np.linspace(0, tf, x.shape[0]), x[:,1])
             ax2.semilogy(J)
             for k in range(x.shape[0]):
